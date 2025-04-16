@@ -1,6 +1,43 @@
 import Head from 'next/head';
+import { useEffect } from 'react';
 
 export default function Home() {
+  useEffect(() => {
+    // Creating the keyframe animations programmatically since we can't use SASS
+    const createKeyframes = (name) => {
+      let styles = '';
+      const steps = 20;
+      
+      for (let i = 0; i <= steps; i++) {
+        const percentage = (i * (100/steps)).toFixed(2);
+        const randomTop = Math.floor(Math.random() * 30);
+        const randomBottom = Math.floor(Math.random() * 30);
+        
+        styles += `
+          ${percentage}% {
+            clip: rect(${randomTop}px, 9999px, ${randomBottom + 100}px, 0);
+          }
+        `;
+      }
+      
+      const styleEl = document.createElement('style');
+      styleEl.textContent = `
+        @keyframes ${name} {
+          ${styles}
+        }
+      `;
+      
+      document.head.appendChild(styleEl);
+    };
+    
+    createKeyframes('glitch-animation-1');
+    createKeyframes('glitch-animation-2');
+    
+    return () => {
+      // Cleanup if needed
+    };
+  }, []);
+
   return (
     <>
       <Head>
@@ -24,7 +61,7 @@ export default function Home() {
         <meta property="og:image:height" content="630" />
         
         <meta name="robots" content="index, follow" />
-        <link href="https://fonts.googleapis.com/css2?family=Exo+2&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap" rel="stylesheet" />
       </Head>
 
       <main>
@@ -34,7 +71,9 @@ export default function Home() {
             Your browser does not support the video tag.
           </video>
         </div>
-        <div className="coming-soon">Coming Soon</div>
+        <div className="glitch-wrapper">
+          <h1 className="glitch">Coming Soon</h1>
+        </div>
       </main>
 
       <style jsx global>{`
@@ -68,12 +107,51 @@ export default function Home() {
           object-fit: contain;
         }
 
-        .coming-soon {
+        .glitch-wrapper {
+          position: relative;
+          margin-top: 100px;
+        }
+
+        .glitch {
           color: white;
           font-family: 'Exo 2', sans-serif;
-          font-weight: 400;
-          font-size: 36px;
-          margin-top: 20px;
+          font-weight: 700;
+          font-size: 35px;
+          position: relative;
+        }
+
+        .glitch::before,
+        .glitch::after {
+          content: "Coming Soon";
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background: black;
+          overflow: hidden;
+          top: 0;
+          left: 0;
+        }
+
+        .glitch::before {
+          left: 1px;
+          text-shadow: -1px 0 rgba(255, 0, 0, 0.7);
+          animation-name: glitch-animation-1;
+          animation-duration: 3s;
+          animation-timing-function: linear;
+          animation-delay: 0s;
+          animation-iteration-count: infinite;
+          animation-direction: reverse-alternate;
+        }
+
+        .glitch::after {
+          left: -1px;
+          text-shadow: -1px 0 rgba(0, 0, 255, 0.7);
+          animation-name: glitch-animation-2;
+          animation-duration: 3s;
+          animation-timing-function: linear;
+          animation-delay: 0s;
+          animation-iteration-count: infinite;
+          animation-direction: reverse-alternate;
         }
       `}</style>
     </>
