@@ -72,7 +72,7 @@ export default function Home() {
           color: white;
           font-family: 'Exo 2', sans-serif;
           font-weight: 400;
-          font-size: 24px;
+          font-size: 36px;
           margin-top: 20px;
         }
       `}</style>
